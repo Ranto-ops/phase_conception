@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Conception détaillée – Plateforme étudiants et entreprises</title>
+<style>
+:root{--bg:#fff;--fg:#1f1b2e;--mu:#6b6480;--pr:#6D28D9;--pl:#F3EEFF;--bd:#E4DDF5;--hf:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16121f;--fg:#ece8f7;--mu:#a49ebb;--pr:#A78BFA;--pl:#241c38;--bd:#3a3158;--hf:#16121f}}
+:root[data-theme="dark"]{--bg:#16121f;--fg:#ece8f7;--mu:#a49ebb;--pr:#A78BFA;--pl:#241c38;--bd:#3a3158;--hf:#16121f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 Georgia,"Times New Roman",serif}
+main{max-width:860px;margin:0 auto;padding:24px 18px 60px}
+h1{font:700 28px/1.2 system-ui,Arial,sans-serif;color:var(--pr);margin:8px 0}
+h2{font:700 21px/1.3 system-ui,Arial,sans-serif;margin:38px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--pr)}
+h3{font:600 16px system-ui,Arial,sans-serif;margin:20px 0 6px;color:var(--pr)}
+p,li{max-width:75ch}
+.sub{color:var(--mu);margin:0 0 8px}
+table{border-collapse:collapse;width:100%;font:14px/1.45 system-ui,Arial,sans-serif;margin:10px 0}
+th,td{border:1px solid var(--bd);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--pl)}
+code{font:13px ui-monospace,Menlo,monospace;background:var(--pl);padding:1px 5px;border-radius:4px}
+.scroll{overflow-x:auto;border:1px solid var(--bd);border-radius:8px;padding:6px;margin:10px 0}
+.scroll svg{min-width:760px;display:block;font-family:system-ui,Arial,sans-serif}
+.note{background:var(--pl);border-left:4px solid var(--pr);padding:8px 12px;font:14px/1.5 system-ui,Arial,sans-serif;margin:10px 0}
+.ent{fill:var(--bg);stroke:var(--pr);stroke-width:1.2}.enth{fill:var(--pr)}.et{fill:var(--hf);font-size:12.5px;font-weight:700}
+.at{fill:var(--fg);font-size:11.5px}.id{text-decoration:underline;font-weight:700}
+.as{fill:var(--pl);stroke:var(--pr);stroke-width:1.2}.an{fill:var(--pr);font-size:11px;font-weight:700}.aa{fill:var(--fg);font-size:10.5px}
+.ln{stroke:var(--mu);stroke-width:1.2;fill:none}.cd{fill:var(--pr);font-size:10.5px;font-weight:600}
+.uc{fill:var(--pl);stroke:var(--pr);stroke-width:1.2}.ut{fill:var(--fg);font-size:11.5px}.bd{fill:none;stroke:var(--pr);stroke-width:1.5;stroke-dasharray:6 4}
+.ac{stroke:var(--fg);stroke-width:1.6;fill:none}
+@media print{.scroll{overflow:visible}.scroll svg{min-width:0}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<main>
+<h1>Conception détaillée de la plateforme intelligente de mise en relation entre étudiants, jeunes diplômés et entreprises</h1>
+<p class="sub">Phase de conception · méthode Merise · React, Node.js, PostgreSQL · charte blanc et violet</p>
+
+<h2>1. Présentation du projet</h2>
+<p><b>Problème.</b> Les étudiants et jeunes diplômés peinent à trouver un stage ou un premier emploi. Les entreprises perdent du temps à trier des candidatures peu adaptées.</p>
+<p><b>Solution.</b> Une plateforme unique où chaque côté publie son profil ou ses offres, et où un module de matching recommande automatiquement les offres et les candidats les plus compatibles.</p>
+<p><b>Objectifs.</b> Faciliter l’accès aux stages et aux emplois, faire gagner du temps aux entreprises, centraliser profils, offres et candidatures.</p>
+
+<h2>2. Acteurs</h2>
+<table>
+<tr><th>Acteur</th><th>Rôle et droits</th></tr>
+<tr><td>Étudiant / jeune diplômé</td><td>S’inscrire, compléter son profil, chercher des offres, postuler, suivre ses candidatures, recevoir des recommandations.</td></tr>
+<tr><td>Entreprise</td><td>S’inscrire, publier et gérer des offres, consulter les candidatures, changer leur statut, contacter un candidat.</td></tr>
+<tr><td>Administrateur</td><td>Valider les entreprises, modérer les offres, gérer les utilisateurs, consulter les statistiques.</td></tr>
+</table>
+
+<h2>3. Fonctionnalités par module</h2>
+<table>
+<tr><th>Module</th><th>Fonctionnalités</th></tr>
+<tr><td>Authentification</td><td>Inscription avec choix du rôle, connexion, déconnexion, mot de passe oublié, jeton JWT.</td></tr>
+<tr><td>Profil étudiant</td><td>Identité, formation, niveau, ville, compétences avec niveau, CV en PDF, liens, type de recherche (stage ou emploi).</td></tr>
+<tr><td>Profil entreprise</td><td>Nom, secteur, description, logo, ville, site web, statut de validation.</td></tr>
+<tr><td>Offres</td><td>Créer, modifier, clôturer, supprimer ; rechercher par mots-clés et filtres (domaine, ville, type).</td></tr>
+<tr><td>Candidatures</td><td>Postuler avec message et CV ; statuts : envoyée, vue, en étude, acceptée, refusée ; historique.</td></tr>
+<tr><td>Matching</td><td>Score de compatibilité étudiant ↔ offre ; recommandations pour les deux côtés.</td></tr>
+<tr><td>Communication</td><td>Notifications (changement de statut, nouvelle offre compatible) et messagerie entreprise ↔ candidat.</td></tr>
+<tr><td>Administration</td><td>Validation des entreprises, modération, statistiques.</td></tr>
+</table>
+
+<h2>4. Règles de gestion</h2>
+<ol>
+<li>Une entreprise ne publie qu’après validation par l’administrateur.</li>
+<li>Un étudiant ne peut postuler qu’une seule fois à une même offre.</li>
+<li>Une offre expirée ou clôturée n’accepte plus de candidatures.</li>
+<li>Seule l’entreprise propriétaire d’une offre voit ses candidatures.</li>
+<li>Un étudiant ne voit que ses propres candidatures.</li>
+</ol>
+
+<h2>5. Principe du matching</h2>
+<p>Le score sur 100 est calculé par pondération. Les offres sont triées par score décroissant.</p>
+<table>
+<tr><th>Critère</th><th>Poids</th></tr>
+<tr><td>Compétences communes entre l’étudiant et l’offre</td><td>50 %</td></tr>
+<tr><td>Niveau ou formation adapté</td><td>20 %</td></tr>
+<tr><td>Ville</td><td>15 %</td></tr>
+<tr><td>Type recherché = type proposé</td><td>15 %</td></tr>
+</table>
+<p>Exemple : l’offre exige 4 compétences, l’étudiant en possède 3, donc 3/4 × 50 = 37,5 points pour ce critère.</p>
+
+<h2>6. Diagramme de cas d’utilisation</h2>
+<div class="scroll"><svg id="uc" viewBox="0 0 900 520" role="img" aria-label="Diagramme de cas d’utilisation"></svg></div>
+<p class="note">Tous les acteurs doivent s’authentifier avant d’utiliser les cas d’utilisation (sauf l’inscription).</p>
+
+<h2>7. MCD (modèle conceptuel de données, Merise)</h2>
+<div class="scroll"><svg id="mcd" viewBox="0 0 1060 770" role="img" aria-label="Modèle conceptuel de données Merise"></svg></div>
+<p class="note">Les identifiants sont soulignés. CANDIDATURE, POSSÉDER et REQUÉRIR sont des associations porteuses de propriétés : elles deviendront des tables au passage au MLD.</p>
+
+<h3>Dictionnaire de données</h3>
+<table>
+<tr><th>Entité</th><th>Attributs (type)</th></tr>
+<tr><td>UTILISATEUR</td><td>id_utilisateur (entier), email (texte), mot_de_passe_hash (texte), rôle (texte), date_création (date)</td></tr>
+<tr><td>ÉTUDIANT</td><td>id_etudiant (entier), nom, prénom, formation, niveau, ville (texte), cv_url (texte), type_recherche (texte)</td></tr>
+<tr><td>ENTREPRISE</td><td>id_entreprise (entier), nom, secteur, description, ville, site_web (texte), statut_validation (texte)</td></tr>
+<tr><td>OFFRE</td><td>id_offre (entier), titre, description, type, durée, ville (texte), date_limite (date), statut (texte)</td></tr>
+<tr><td>COMPÉTENCE</td><td>id_competence (entier), nom (texte)</td></tr>
+<tr><td>MESSAGE</td><td>id_message (entier), contenu (texte), date (date et heure)</td></tr>
+<tr><td>NOTIFICATION</td><td>id_notification (entier), contenu (texte), lue (booléen), date (date et heure)</td></tr>
+</table>
+
+<h2>8. API REST principale</h2>
+<table>
+<tr><th>Domaine</th><th>Routes</th></tr>
+<tr><td>Authentification</td><td><code>POST /auth/register</code> <code>POST /auth/login</code></td></tr>
+<tr><td>Offres</td><td><code>GET /offres</code> <code>GET /offres/:id</code> <code>POST /offres</code> <code>PUT /offres/:id</code> <code>DELETE /offres/:id</code></td></tr>
+<tr><td>Candidatures</td><td><code>POST /offres/:id/candidater</code> <code>GET /mes-candidatures</code> <code>PATCH /candidatures/:id/statut</code></td></tr>
+<tr><td>Matching</td><td><code>GET /recommandations</code></td></tr>
+<tr><td>Administration</td><td><code>GET /admin/entreprises</code> <code>PATCH /admin/entreprises/:id/valider</code></td></tr>
+</table>
+
+<h2>9. Sécurité</h2>
+<ul>
+<li>Mots de passe hachés (bcrypt), jetons JWT avec expiration.</li>
+<li>Contrôle d’accès par rôle sur chaque route.</li>
+<li>Validation des entrées contre les injections SQL et XSS.</li>
+<li>Limite de taille et de type des fichiers CV.</li>
+</ul>
+</main>
+<script>
+function L(p){return '<polyline class="ln" points="'+p+'"/>'}
+function C(x,y,t,a){return '<text class="cd" x="'+x+'" y="'+y+'"'+(a?' text-anchor="end"':'')+'>'+t+'</text>'}
+function E(x,y,w,t,at){var h=26+at.length*17,s='<rect class="ent" x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="6"/>';
+s+='<path class="enth" d="M'+x+' '+(y+26)+'V'+(y+6)+'Q'+x+' '+y+' '+(x+6)+' '+y+'H'+(x+w-6)+'Q'+(x+w)+' '+y+' '+(x+w)+' '+(y+6)+'V'+(y+26)+'Z"/>';
+s+='<text class="et" x="'+(x+w/2)+'" y="'+(y+18)+'" text-anchor="middle">'+t+'</text>';
+at.forEach(function(a,i){s+='<text class="at'+(i?'':' id')+'" x="'+(x+10)+'" y="'+(y+43+i*17)+'">'+a+'</text>'});return s}
+function A(cx,cy,w,t,at){var h=24+at.length*15,s='<rect class="as" x="'+(cx-w/2)+'" y="'+(cy-h/2)+'" width="'+w+'" height="'+h+'" rx="12"/>';
+s+='<text class="an" x="'+cx+'" y="'+(cy-h/2+16)+'" text-anchor="middle">'+t+'</text>';
+at.forEach(function(a,i){s+='<text class="aa" x="'+cx+'" y="'+(cy-h/2+31+i*15)+'" text-anchor="middle">'+a+'</text>'});return s}
+var m='';
+m+=L('200,101 255,101')+L('385,101 450,101')+L('630,101 700,101')+L('790,101 850,101');
+m+=L('110,182 110,243')+L('110,282 230,370')+L('540,182 540,250')+L('540,274 410,370');
+m+=L('40,182 40,495 190,495')+L('290,495 420,495')+L('940,165 940,495 830,495')+L('600,495 730,495');
+m+=L('470,551 370,588')+L('370,612 370,650')+L('550,551 480,588')+L('480,612 480,650')+L('600,530 780,530 780,588')+L('780,612 780,650');
+m+=E(20,20,180,'ÉTUDIANT',['id_etudiant','nom','prénom','formation','niveau','ville','cv_url','type_recherche']);
+m+=E(450,20,180,'OFFRE',['id_offre','titre','description','type','durée','ville','date_limite','statut']);
+m+=E(850,20,180,'ENTREPRISE',['id_entreprise','nom','secteur','description','ville','site_web','statut_validation']);
+m+=E(230,340,180,'COMPÉTENCE',['id_competence','nom']);
+m+=E(420,440,180,'UTILISATEUR',['id_utilisateur','email','mot_de_passe_hash','rôle','date_création']);
+m+=E(330,650,180,'MESSAGE',['id_message','contenu','date']);
+m+=E(720,650,180,'NOTIFICATION',['id_notification','contenu','lue','date']);
+m+=A(320,101,130,'CANDIDATURE',['message','statut','date','score_matching']);
+m+=A(745,101,90,'PUBLIER',[])+A(110,262,110,'POSSÉDER',['niveau'])+A(540,262,100,'REQUÉRIR',[]);
+m+=A(240,495,100,'PROFIL_ÉTU',[])+A(780,495,100,'PROFIL_ENT',[])+A(370,600,90,'ENVOYER',[])+A(480,600,90,'RECEVOIR',[])+A(780,600,90,'NOTIFIER',[]);
+m+=C(204,94,'(0,N)')+C(251,94,'(0,N)',1)+C(389,94,'(0,N)')+C(446,94,'(0,N)',1);
+m+=C(634,94,'(1,1)')+C(696,94,'(0,N)',1)+C(794,94,'(0,N)')+C(846,94,'(1,1)',1);
+m+=C(116,198,'(0,N)')+C(116,238,'(0,N)')+C(546,198,'(0,N)')+C(546,246,'(0,N)');
+m+=C(150,330,'(0,N)')+C(224,360,'(0,N)',1)+C(420,336,'(0,N)')+C(470,330,'(0,N)',1);
+m+=C(46,200,'(1,1)')+C(414,489,'(0,1)',1)+C(946,190,'(1,1)')+C(606,489,'(0,1)');
+m+=C(430,570,'(0,N)')+C(376,640,'(1,1)')+C(556,570,'(0,N)')+C(486,640,'(1,1)')+C(606,524,'(0,N)')+C(786,640,'(1,1)');
+document.getElementById('mcd').innerHTML=m;
+
+function U(cx,cy,t,rx){rx=rx||95;return '<ellipse class="uc" cx="'+cx+'" cy="'+cy+'" rx="'+rx+'" ry="20"/><text class="ut" x="'+cx+'" y="'+(cy+4)+'" text-anchor="middle">'+t+'</text>'}
+function P(x,y,n){return '<g class="ac"><circle cx="'+x+'" cy="'+(y-30)+'" r="9"/><path d="M'+x+' '+(y-21)+'V'+(y+10)+'M'+(x-16)+' '+(y-10)+'H'+(x+16)+'M'+x+' '+(y+10)+'L'+(x-14)+' '+(y+30)+'M'+x+' '+(y+10)+'L'+(x+14)+' '+(y+30)+'"/></g><text class="ut" x="'+x+'" y="'+(y+50)+'" text-anchor="middle">'+n+'</text>'}
+function K(a,b,c,d){return '<line class="ln" x1="'+a+'" y1="'+b+'" x2="'+c+'" y2="'+d+'"/>'}
+var u='<rect class="bd" x="235" y="26" width="430" height="474" rx="12"/><text class="an" x="450" y="18" text-anchor="middle">Plateforme de mise en relation</text>';
+[125,177,229,281,333].forEach(function(y){u+=K(126,225,255,y)});u+=K(126,225,350,445);
+[125,177].forEach(function(y){u+=K(774,150,645,y)});
+[229,281,333,385].forEach(function(y){u+=K(774,325,645,y)});u+=K(774,325,550,445);
+u+=U(450,62,'S’authentifier',100);
+u+=U(350,125,'Gérer son profil')+U(350,177,'Rechercher des offres')+U(350,229,'Postuler à une offre')+U(350,281,'Suivre ses candidatures')+U(350,333,'Voir les recommandations');
+u+=U(550,125,'Valider les entreprises')+U(550,177,'Modérer offres et stats')+U(550,229,'Gérer profil entreprise')+U(550,281,'Publier / gérer offres')+U(550,333,'Consulter candidatures')+U(550,385,'Changer statut candidature');
+u+=U(450,445,'Messagerie et notifications',100);
+u+=P(110,225,'Étudiant')+P(790,150,'Administrateur')+P(790,325,'Entreprise');
+document.getElementById('uc').innerHTML=u;
+</script>
+</body>
+</html>
